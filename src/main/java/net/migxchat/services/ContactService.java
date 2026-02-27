@@ -22,7 +22,13 @@ public class ContactService {
     public Contact addContact(String userUsername, String contactUsername, String displayName) {
         if (contactRepository.existsByUserUsernameAndContactUsername(userUsername, contactUsername)) {
             return contactRepository.findByUserUsernameAndContactUsername(userUsername, contactUsername)
-                    .orElseThrow(() -> new RuntimeException("Contact not found: " + contactUsername));
+                    .orElseGet(() -> {
+                        Contact c = new Contact();
+                        c.setUserUsername(userUsername);
+                        c.setContactUsername(contactUsername);
+                        c.setDisplayName(displayName);
+                        return contactRepository.save(c);
+                    });
         }
         Contact contact = new Contact();
         contact.setUserUsername(userUsername);

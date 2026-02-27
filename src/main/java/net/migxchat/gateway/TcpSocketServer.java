@@ -49,6 +49,9 @@ public class TcpSocketServer {
                     @Override
                     protected void initChannel(SocketChannel ch) {
                         ch.pipeline().addLast(
+                                // Fusion Protocol: type(1 byte) + length(4 bytes) + seq+fields(variable)
+                                // lengthFieldOffset=1 (skip type byte), lengthFieldLength=4,
+                                // lengthAdjustment=0, initialBytesToStrip=0 (keep full frame)
                                 new LengthFieldBasedFrameDecoder(maxFrameSize, 1, 4, 0, 0),
                                 nettyServerHandler
                         );

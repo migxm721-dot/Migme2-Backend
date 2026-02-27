@@ -78,9 +78,9 @@ public class FusionPacket {
             fieldsBuffer.put((byte) field.getType().getCode());
             switch (field.getType()) {
                 case BYTE -> fieldsBuffer.put((byte) 1).put(((Number) field.getValue()).byteValue());
-                case SHORT -> fieldsBuffer.put((byte) 2).putShort(((Number) field.getValue()).shortValue());
-                case INT -> fieldsBuffer.put((byte) 4).putInt(((Number) field.getValue()).intValue());
-                case LONG -> fieldsBuffer.put((byte) 8).putLong(((Number) field.getValue()).longValue());
+                case SHORT -> fieldsBuffer.putShort((short) Short.BYTES).putShort(((Number) field.getValue()).shortValue());
+                case INT -> fieldsBuffer.putInt(Integer.BYTES).putInt(((Number) field.getValue()).intValue());
+                case LONG -> fieldsBuffer.putLong((long) Long.BYTES).putLong(((Number) field.getValue()).longValue());
                 case BOOLEAN -> fieldsBuffer.put((byte) 1).put((byte) ((Boolean) field.getValue() ? 1 : 0));
                 case STRING -> {
                     byte[] strBytes = ((String) field.getValue()).getBytes(StandardCharsets.UTF_8);
