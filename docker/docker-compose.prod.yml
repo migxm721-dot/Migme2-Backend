@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  backend:
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M

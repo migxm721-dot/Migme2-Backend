@@ -1,0 +1,61 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: migme-backend
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:migmedb}
+    username: ${DB_USERNAME:migmeuser}
+    password: ${DB_PASSWORD:changeme}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 3000ms
+
+fusion:
+  tcp:
+    port: 9119
+    boss-threads: 2
+    worker-threads: 8
+    max-connections: 5000
+    keepalive-interval: 30000
+    connection-timeout: 60000
+    max-frame-size: 1048576
+
+app:
+  domain: api.migxchat.net
+  image-server: https://img.migxchat.net
+  max-upload-size: 10MB
+
+  jwt:
+    secret: ${JWT_SECRET:change-this-secret-in-production-must-be-at-least-256-bits}
+    expiration: 86400000
+
+  security:
+    bcrypt-rounds: 12
