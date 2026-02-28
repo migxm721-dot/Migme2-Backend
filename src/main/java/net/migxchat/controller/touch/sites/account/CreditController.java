@@ -53,7 +53,15 @@ public class CreditController {
         if (userId == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "User ID required"));
         }
-        BigDecimal amount = new BigDecimal(body.get("amount").toString());
+        if (body.get("amount") == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "amount is required"));
+        }
+        BigDecimal amount;
+        try {
+            amount = new BigDecimal(body.get("amount").toString());
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid amount"));
+        }
         String paymentMethod = (String) body.get("paymentMethod");
         String transactionId = (String) body.getOrDefault("transactionId", "");
 

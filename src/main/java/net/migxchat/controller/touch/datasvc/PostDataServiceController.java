@@ -136,7 +136,11 @@ public class PostDataServiceController {
         if (userId == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "User ID required"));
         }
-        Post post = postService.tagPost(postId, userId, body.get("tagId"));
+        Integer tagId = body.get("tagId");
+        if (tagId == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "tagId is required"));
+        }
+        Post post = postService.tagPost(postId, userId, tagId);
         return ResponseEntity.ok(PostResponse.from(post));
     }
 

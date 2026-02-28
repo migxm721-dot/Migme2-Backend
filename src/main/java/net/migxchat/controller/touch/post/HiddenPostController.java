@@ -55,14 +55,16 @@ public class HiddenPostController {
 
         try {
             if (photo != null && !photo.isEmpty()) {
-                String filename = UUID.randomUUID() + "_" + photo.getOriginalFilename();
+                String ext = getFileExtension(photo.getOriginalFilename());
+                String filename = UUID.randomUUID() + ext;
                 Path uploadDir = Paths.get(imagePath);
                 Files.createDirectories(uploadDir);
                 Files.copy(photo.getInputStream(), uploadDir.resolve(filename));
                 request.setPhotoUrl("/uploads/images/" + filename);
                 request.setType(PostType.PHOTO);
             } else if (video != null && !video.isEmpty()) {
-                String filename = UUID.randomUUID() + "_" + video.getOriginalFilename();
+                String ext = getFileExtension(video.getOriginalFilename());
+                String filename = UUID.randomUUID() + ext;
                 Path uploadDir = Paths.get(videoPath);
                 Files.createDirectories(uploadDir);
                 Files.copy(video.getInputStream(), uploadDir.resolve(filename));
@@ -76,5 +78,11 @@ public class HiddenPostController {
 
         Post post = postService.createPost(request, userId, username != null ? username : userId);
         return ResponseEntity.ok(PostResponse.from(post));
+    }
+
+    private String getFileExtension(String filename) {
+        if (filename == null || !filename.contains(".")) return "";
+        String ext = filename.substring(filename.lastIndexOf('.'));
+        return ext.replaceAll("[^.a-zA-Z0-9]", "");
     }
 }

@@ -6,7 +6,6 @@ import net.migxchat.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +38,7 @@ public class ChatroomModerationService {
         if (!moderator.canKick()) {
             throw new UnauthorizedActionException("You don't have permission to kick users");
         }
-        if (moderator.getRole().isHigherThan(target.getRole()) || target.isOwner()) {
+        if (!moderator.getRole().isHigherThan(target.getRole()) || target.isOwner()) {
             throw new UnauthorizedActionException("Cannot kick a user with equal or higher role");
         }
 
@@ -151,9 +150,8 @@ public class ChatroomModerationService {
     @Transactional
     public ChatroomMember promoteUser(String roomName, String targetUsername, String moderatorUsername,
                                        ChatroomRole newRole) {
-        getMember(roomName, moderatorUsername);
-        ChatroomMember target = getMember(roomName, targetUsername);
         ChatroomMember moderator = getMember(roomName, moderatorUsername);
+        ChatroomMember target = getMember(roomName, targetUsername);
 
         if (!moderator.getRole().isCanManageRoles()) {
             throw new UnauthorizedActionException("You don't have permission to manage roles");
@@ -195,7 +193,6 @@ public class ChatroomModerationService {
     }
 
     @Transactional
-    @Scheduled(fixedRateString = "${app.moderation.cleanup-interval:3600000}")
     public void cleanupExpiredModeration() {
         LocalDateTime now = LocalDateTime.now();
         List<ChatroomBan> expiredBans = banRepository.findExpiredBans(now);

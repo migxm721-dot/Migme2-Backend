@@ -64,7 +64,15 @@ public class StoreController {
         if (userId == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "User ID required"));
         }
-        Long packId = Long.valueOf(body.get("packId").toString());
+        if (body.get("packId") == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "packId is required"));
+        }
+        Long packId;
+        try {
+            packId = Long.valueOf(body.get("packId").toString());
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid packId"));
+        }
         Purchase purchase = storeService.purchaseStickerPack(userId, packId);
         return ResponseEntity.ok(Map.of("purchaseId", purchase.getId(), "status", purchase.getStatus(),
                 "cost", purchase.getCost()));

@@ -68,12 +68,14 @@ public class ChatroomController {
         Chatroom updates = new Chatroom();
         if (body.containsKey("topic")) updates.setTopic((String) body.get("topic"));
         if (body.containsKey("description")) updates.setDescription((String) body.get("description"));
-        if (body.containsKey("maxMembers")) updates.setMaxMembers((Integer) body.get("maxMembers"));
+        if (body.containsKey("maxMembers") && body.get("maxMembers") != null)
+            updates.setMaxMembers(Integer.parseInt(body.get("maxMembers").toString()));
         if (body.containsKey("isPublic")) updates.setIsPublic((Boolean) body.get("isPublic"));
         if (body.containsKey("isPasswordProtected")) updates.setIsPasswordProtected((Boolean) body.get("isPasswordProtected"));
         if (body.containsKey("roomPassword")) updates.setRoomPassword((String) body.get("roomPassword"));
         if (body.containsKey("allowGuestPost")) updates.setAllowGuestPost((Boolean) body.get("allowGuestPost"));
-        if (body.containsKey("slowModeSeconds")) updates.setSlowModeSeconds((Integer) body.get("slowModeSeconds"));
+        if (body.containsKey("slowModeSeconds") && body.get("slowModeSeconds") != null)
+            updates.setSlowModeSeconds(Integer.parseInt(body.get("slowModeSeconds").toString()));
 
         Chatroom updated = chatroomService.updateChatroom(roomName, updates, username);
         return ResponseEntity.ok(ChatroomResponse.from(updated));
