@@ -48,6 +48,12 @@ fusion:
     connection-timeout: 60000
     max-frame-size: 1048576
 
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 15MB
+
 app:
   domain: api.migxchat.net
   image-server: https://img.migxchat.net
@@ -56,6 +62,17 @@ app:
   jwt:
     secret: ${JWT_SECRET:change-this-secret-in-production-must-be-at-least-256-bits}
     expiration: 86400000
+
+  upload:
+    base-path: ${UPLOAD_BASE_PATH:/var/uploads}
+    image-path: ${UPLOAD_IMAGE_PATH:/var/uploads/images}
+    video-path: ${UPLOAD_VIDEO_PATH:/var/uploads/videos}
+
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+
+  moderation:
+    cleanup-interval: ${MODERATION_CLEANUP_INTERVAL:3600000}
 
   security:
     bcrypt-rounds: 12
